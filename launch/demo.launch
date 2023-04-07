@@ -1,0 +1,33 @@
+<launch>
+
+	<node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub" args="0 0 0 0 0 0 map camera" />
+
+	<node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub_2" args="0.5 0 0 -1.571 0 -1.571 map image" />
+
+	<!-- <node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub_3" args="0.5 0 0 0 0 0 map image_2" /> -->
+
+
+
+	<node pkg="rviz"  type="rviz" name="rviz" args="-d /proj/camera_ws/src/cam_projection/demo.rviz" />
+
+	<node pkg="cam_projection" type="pub_sphere.py" name="sphere_pub" output="screen"/>
+
+	<node pkg="cam_projection" type="project" name="camera_projection" output="screen">
+	
+		<param name="rate"               type="double"   value="1.0"/>
+		<param name="frame_map"          type="str"      value="map"/>
+		<param name="frame_camera"       type="str"      value="camera"/>
+		<param name="frame_image"        type="str"      value="image"/>
+		<param name="topic_pcl"          type="str"      value="/points"/>
+		<param name="topic_pcl_debug"    type="str"      value="/points_debug"/>
+		<param name="topic_image"        type="str"      value="/image"/>
+		<param name="topic_marker_viz"   type="str"      value="/marker_viz"/>
+		
+		<param name="focal_length"       type="double"   value="0.5"/>
+		<param name="pixel_size"         type="double"   value="0.001"/>
+		<param name="image_width"        type="int"      value="480"/>
+		<param name="image_height"       type="int"      value="360"/>
+
+	</node>
+
+</launch>

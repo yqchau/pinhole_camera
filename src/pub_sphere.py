@@ -14,7 +14,7 @@ def sample_spherical(npoints, ndim=3):
 if __name__ == '__main__':
     rospy.init_node("sphere_pub")
 
-    rospy.loginfo("hello world")
+    # rospy.loginfo("hello world")
 
     pub = rospy.Publisher("/points", PointCloud2, queue_size=1)
 
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     xi, yi, zi = sample_spherical(100)
     points = np.stack([xi,yi,zi], axis=0).T
     points[:,0] += 5
-    points[:,1] += -5
+    points[:,1] += -1
     # points[:,2] += 1
     # points = points.tolist() 
     # header = Header()
@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     while not rospy.is_shutdown():
 
-        points[:,1] += 0.1
+        # points[:,1] += 0.1
         points_list = points.tolist() 
         header = Header()
         header.frame_id = "map"
@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
         msg.header.stamp = rospy.Time.now()
         pub.publish(msg)
-        rospy.loginfo("Published")
+        # rospy.loginfo("Published")
         rate.sleep()
 
 
