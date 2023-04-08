@@ -71,7 +71,7 @@
   <depend>pcl_ros</depend>
   <depend>cv_bridge</depend>
   <depend>tf</depend>
-
+  <depend>geometry_msgs</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

@@ -2,8 +2,8 @@
 
 	<!-- Camera Frame Relative to Map Frame -->
 	<arg name="x_camera"                          default="0.0"/>
-	<arg name="y_camera"                          default="0.0"/>
-	<arg name="z_camera"                          default="0.0"/>
+	<arg name="y_camera"                          default="1.0"/>
+	<arg name="z_camera"                          default="0.2"/>
 	<arg name="yaw_camera"                        default="0.0"/>
 	<arg name="pitch_camera"                      default="0.0"/>	 
 	<arg name="roll_camera"                       default="0.0"/>
@@ -32,19 +32,20 @@
 
 	<node pkg="cam_projection" type="project" name="camera_projection" output="screen">
 	
-		<param name="rate"               type="double"   value="1.0"/>
-		<param name="frame_map"          type="str"      value="map"/>
-		<param name="frame_camera"       type="str"      value="camera"/>
-		<param name="frame_image"        type="str"      value="image"/>
-		<param name="topic_pcl"          type="str"      value="/points"/>
-		<param name="topic_pcl_debug"    type="str"      value="/points_debug"/>
-		<param name="topic_image"        type="str"      value="/image"/>
-		<param name="topic_marker_viz"   type="str"      value="/marker_viz"/>
-		
-		<param name="focal_length"       type="double"   value="0.5"/>
-		<param name="pixel_size"         type="double"   value="0.001"/>
-		<param name="image_width"        type="int"      value="480"/>
-		<param name="image_height"       type="int"      value="360"/>
+		<param name="rate"                     type="double"   value="1.0"/>
+		<param name="frame_map"                type="str"      value="map"/>
+		<param name="frame_camera"             type="str"      value="camera"/>
+		<param name="frame_image"              type="str"      value="image"/>
+		<param name="topic_pcl"                type="str"      value="/points"/>
+		<param name="topic_pcl_debug"          type="str"      value="/points_debug"/>
+		<param name="topic_image"              type="str"      value="/image"/>
+		<param name="topic_marker_viz"         type="str"      value="/marker_viz"/>
+		<param name="topic_marker_array_viz"   type="str"      value="/marker_array_viz"/>
+
+		<param name="focal_length"             type="double"   value="0.5"/>
+		<param name="pixel_size"               type="double"   value="0.001"/>
+		<param name="image_width"              type="int"      value="480"/>
+		<param name="image_height"             type="int"      value="360"/>
 
 	</node>
 

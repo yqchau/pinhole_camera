@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   visualization_msgs
+  geometry_msgs
   sensor_msgs
   pcl_conversions
   pcl_ros
@@ -25,6 +26,7 @@ catkin_package(
   sensor_msgs
   std_msgs
   visualization_msgs
+  geometry_msgs
   sensor_msgs
   pcl_conversions
   pcl_ros

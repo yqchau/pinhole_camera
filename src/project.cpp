@@ -1,5 +1,49 @@
 #include <project.h>
 
+visualization_msgs::Marker getArrowMarker(
+    float x1, 
+    float y1, 
+    float z1, 
+    float x2, 
+    float y2, 
+    float z2, 
+    int id, 
+    std::string frame
+    ){
+
+    visualization_msgs::Marker arrow_marker;
+    arrow_marker.id = id;
+    arrow_marker.header.frame_id = frame;
+    arrow_marker.type = visualization_msgs::Marker::ARROW;
+    arrow_marker.scale.x = 0.01;
+    arrow_marker.scale.y = 0.01;
+    arrow_marker.scale.z = 0.01;
+    arrow_marker.color.a = 1.0;
+    arrow_marker.color.r = 1.0;
+    arrow_marker.color.g = 1.0;
+    arrow_marker.color.b = 0.3;
+
+    arrow_marker.pose.position.x = 0.0;
+    arrow_marker.pose.position.y = 0.0;
+    arrow_marker.pose.position.z = 0.0;
+    arrow_marker.pose.orientation.w = 1;
+    arrow_marker.pose.orientation.x = 0;
+    arrow_marker.pose.orientation.y = 0;
+    arrow_marker.pose.orientation.z = 0;
+
+    geometry_msgs::Point start_point, end_point;
+    start_point.x = x1; 
+    start_point.y = y1; 
+    start_point.z = z1; 
+    end_point.x = x2; 
+    end_point.y = y2; 
+    end_point.z = z2; 
+
+    arrow_marker.points.push_back(start_point);
+    arrow_marker.points.push_back(end_point);
+
+    return arrow_marker;
+}
 
 Camera::Camera(ros::NodeHandle nh_private) : 
 frame_map_{nh_private.param<std::string>("frame_map", "NONE")},
@@ -9,6 +53,7 @@ topic_pcl_{nh_private.param<std::string>("topic_pcl", "NONE")},
 topic_pcl_debug_{nh_private.param<std::string>("topic_pcl_debug", "NONE")},
 topic_image_{nh_private.param<std::string>("topic_image", "NONE")},
 topic_marker_viz_{nh_private.param<std::string>("topic_marker_viz", "NONE")},
+topic_marker_array_viz_{nh_private.param<std::string>("topic_marker_array_viz", "NONE")},
 rate_{nh_private.param<double>("rate", 1.0)},
 focal_length_{nh_private.param<double>("focal_length", 1.0)},
 pixel_size_{nh_private.param<double>("pixel_size", 1000)},
@@ -24,6 +69,7 @@ image_height_{nh_private.param<int>("image_height", 360)}
     ROS_INFO("PCL Debug Topic: %s", topic_pcl_debug_.c_str());
     ROS_INFO("Image Topic: %s", topic_image_.c_str());
     ROS_INFO("Marker Viz Topic: %s", topic_marker_viz_.c_str());
+    ROS_INFO("Marker Array Viz Topic: %s", topic_marker_array_viz_.c_str());
     ROS_INFO("Focal Length: %lf", focal_length_);
     ROS_INFO("Pixel Size: %f", pixel_size_);
     ROS_INFO("image width: %d", image_width_);
@@ -60,25 +106,45 @@ void Camera::callback_pcl(const sensor_msgs::PointCloud2::ConstPtr& msg_pcl_map)
 
     // intrinsic matrix transform: image3D -> image2D 
     cv::Mat image(image_height_, image_width_, CV_8UC1, cv::Scalar(0));
+
+    visualization_msgs::MarkerArray msg_marker_array;
+    int count = 0;
     for (auto& point : *pcl_frame_image_)
     {
         // ROS_INFO_THROTTLE(1, "x: %f, y: %f, z: %f", point.x, point.y, point.z);
         int u, v;
+        float x,y;
+
+
 
         u = static_cast<int>(focal_length_ / pixel_size_ * point.x / point.z + image_width_ / 2);
         v = static_cast<int>(focal_length_ / pixel_size_ * point.y / point.z + image_height_ / 2);
 
-    if (0 <= u && u < image_width_ && 0 <= v && v < image_height_)
-        {
-            // ROS_INFO("u: %d, v: %d", u, v);
-            image.at<uint8_t>(v,u) = 255;
-        }
+        x = focal_length_ * point.x / point.z;
+        y = focal_length_ * point.y / point.z;
+
+        visualization_msgs::Marker arrow_marker = getArrowMarker(
+            x, y, 0, point.x, point.y, point.z, count, frame_image_
+        );
+
+
+        if (0 <= u && u < image_width_ && 0 <= v && v < image_height_)
+            {
+                image.at<uint8_t>(v,u) = 255;
+                arrow_marker.color.r = 1.0;
+                arrow_marker.color.g = 1.0;
+                arrow_marker.color.b = 1.0;     
+            }
+        
+        msg_marker_array.markers.push_back(arrow_marker);
+        count += 1;
     }
 
     auto msg_image = cv_bridge::CvImage(std_msgs::Header(), "mono8", image).toImageMsg();
+
     publisher_image_.publish(msg_image);
     publisher_marker_.publish(image_marker_);
-    
+    publisher_marker_array_.publish(msg_marker_array);
 
 }
 
@@ -88,6 +154,7 @@ void Camera::initROSInterface()
     publisher_pcl_ = nh_.advertise<sensor_msgs::PointCloud2>(topic_pcl_debug_, 1);
     publisher_image_ = nh_.advertise<sensor_msgs::Image>(topic_image_, 1);
     publisher_marker_ = nh_.advertise<visualization_msgs::Marker>(topic_marker_viz_, 1);
+    publisher_marker_array_ = nh_.advertise<visualization_msgs::MarkerArray>(topic_marker_array_viz_, 1);
 }
 
 void Camera::getFrameTransformations()
@@ -125,9 +192,9 @@ void Camera::draw_visualization(){
     image_marker_.scale.y = image_height_ * pixel_size_;
     image_marker_.scale.z = 0.01;
     image_marker_.color.a = 0.3;
-    image_marker_.color.r = 1.0;
-    image_marker_.color.g = 1.0;
-    image_marker_.color.b = 1.0;
+    image_marker_.color.r = 0.0;
+    image_marker_.color.g = 0.0;
+    image_marker_.color.b = 0.0;
     image_marker_.pose.position.x = 0.0;
     image_marker_.pose.position.y = 0.0;
     image_marker_.pose.position.z = 0.0;

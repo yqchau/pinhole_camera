@@ -12,7 +12,8 @@
 #include <pcl_ros/transforms.h>
 
 #include <visualization_msgs/Marker.h>
-
+#include <visualization_msgs/MarkerArray.h>
+#include <geometry_msgs/Point.h>
 
 class Camera
 {
@@ -38,6 +39,7 @@ private:
     ros::Publisher          publisher_pcl_;
     ros::Publisher          publisher_image_;
     ros::Publisher          publisher_marker_;
+    ros::Publisher          publisher_marker_array_;
     ros::Rate               rate_;
 
     tf::TransformListener   tf_listener_;
@@ -51,6 +53,7 @@ private:
     const std::string       topic_pcl_debug_;
     const std::string       topic_image_;
     const std::string       topic_marker_viz_;
+    const std::string       topic_marker_array_viz_;
 
 
     // camera intrinsic params
