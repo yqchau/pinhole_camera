@@ -38,7 +38,7 @@
 		<param name="topic_marker_viz"         type="str"      value="/marker_viz"/>
 		<param name="topic_marker_array_viz"   type="str"      value="/marker_array_viz"/>
 
-		<param name="focal_length"             type="double"   value="0.5"/>
+		<param name="focal_length"             type="double"   value="$(arg x_image)"/>
 		<param name="pixel_size"               type="double"   value="0.001"/>
 		<param name="image_width"              type="int"      value="480"/>
 		<param name="image_height"             type="int"      value="360"/>
