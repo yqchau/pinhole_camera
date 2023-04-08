@@ -68,9 +68,9 @@ void Camera::callback_pcl(const sensor_msgs::PointCloud2::ConstPtr& msg_pcl_map)
         u = static_cast<int>(focal_length_ / pixel_size_ * point.x / point.z + image_width_ / 2);
         v = static_cast<int>(focal_length_ / pixel_size_ * point.y / point.z + image_height_ / 2);
 
-        if ((0<=u<image_width_) && (0<=v<image_height_))
+    if (0 <= u && u < image_width_ && 0 <= v && v < image_height_)
         {
-            ROS_INFO("u: %d, v: %d", u, v);
+            // ROS_INFO("u: %d, v: %d", u, v);
             image.at<uint8_t>(v,u) = 255;
         }
     }

@@ -1,8 +1,26 @@
 <launch>
 
-	<node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub" args="0 0 0 0 0 0 map camera" />
+	<!-- Camera Frame Relative to Map Frame -->
+	<arg name="x_camera"                          default="0.0"/>
+	<arg name="y_camera"                          default="0.0"/>
+	<arg name="z_camera"                          default="0.0"/>
+	<arg name="yaw_camera"                        default="0.0"/>
+	<arg name="pitch_camera"                      default="0.0"/>	 
+	<arg name="roll_camera"                       default="0.0"/>
 
-	<node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub_2" args="0.5 0 0 -1.571 0 -1.571 map image" />
+
+	<!-- Image Frame Relative to Camera Frame -->
+	<arg name="x_image"                           default="0.5"/>
+	<arg name="y_image"                           default="0.0"/>
+	<arg name="z_image"                           default="0.0"/>
+	<arg name="yaw_image"                         default="-1.571"/>
+	<arg name="pitch_image"                       default="0.0"/>	 
+	<arg name="roll_image"                        default="-1.571"/>
+
+
+	<node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub" args="$(arg x_camera) $(arg y_camera) $(arg z_camera) $(arg yaw_camera) $(arg pitch_camera) $(arg roll_camera) map camera" />
+
+	<node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub_2" args="$(arg x_image) $(arg y_image) $(arg z_image) $(arg yaw_image) $(arg pitch_image) $(arg roll_image) camera image" />
 
 	<!-- <node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub_3" args="0.5 0 0 0 0 0 map image_2" /> -->
 
