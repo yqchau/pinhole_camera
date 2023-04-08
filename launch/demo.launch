@@ -22,15 +22,11 @@
 
 	<node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub_2" args="$(arg x_image) $(arg y_image) $(arg z_image) $(arg yaw_image) $(arg pitch_image) $(arg roll_image) camera image" />
 
-	<!-- <node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub_3" args="0.5 0 0 0 0 0 map image_2" /> -->
+	<node pkg="rviz"  type="rviz" name="rviz" args="-d $(find pinhole_camera)/demo.rviz" />
 
+	<node pkg="pinhole_camera" type="pub_sphere.py" name="sphere_pub" output="screen"/>
 
-
-	<node pkg="rviz"  type="rviz" name="rviz" args="-d /proj/camera_ws/src/cam_projection/demo.rviz" />
-
-	<node pkg="cam_projection" type="pub_sphere.py" name="sphere_pub" output="screen"/>
-
-	<node pkg="cam_projection" type="project" name="camera_projection" output="screen">
+	<node pkg="pinhole_camera" type="project" name="camera_projection" output="screen">
 	
 		<param name="rate"                     type="double"   value="1.0"/>
 		<param name="frame_map"                type="str"      value="map"/>

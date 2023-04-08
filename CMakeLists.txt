@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(cam_projection)
+project(pinhole_camera)
 set(CMAKE_CXX_STANDARD 14)
 
 
